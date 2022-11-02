@@ -1,26 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div id="myDIV" class="header">
-        <h2>To Do List</h2>
-      
-    </div>
-        <form id="myForm">
-            <label for="task"> Lisää haluamasi tehtävä:</label>
-            <input type="text" name="fname" id="inputField"><br>
-            <input type="button" onclick="addElement()" value="Lisää">
-        </form>
-    <ul id="toDoList">
-    
-    </ul>
-</body>
-<script>
 const todoList = document.getElementById("toDoList");
 const toDoArray = [];
 
@@ -30,14 +7,18 @@ function updateLocalStorage() {
 
 (function populateToDoList() {
     const a = JSON.parse(window.localStorage.getItem('evenStorage'));
-    console.log(a[0])
-    toDoArray.push({id: 12, task: "testi taski", checked: false}); // testi
-    toDoArray.push({id: 2, task: "testi 2", checked: false}); // testi
-    toDoArray.forEach((x) => addElement(x))
+    if(a?.length > 0) a.forEach(x => toDoArray.push(x)); 
+    toDoArray.forEach((x) => addElement(x, true))
 })();
 
 
-function addElement(x) {
+function addElement(x, fromLocal = false) {
+    if(!fromLocal && document.getElementById("inputField").value.length < 3) {
+        document.getElementById("inputField").style.border = "3px solid red";
+        alert("En tykkää thjistä taskeistä!!!!!!!")
+        return;
+    }
+
     const index = x ? x.id : Math.max(...toDoArray.map(x => x.id)) + 1;
     console.log(index);
     const node = document.createElement("li");
@@ -59,6 +40,7 @@ function addElement(x) {
         });
         toDoArray.push({id: index, task: value, checked: false});
         updateLocalStorage();
+        document.getElementById("inputField").value = ""
     }
     
     node.appendChild(btnDelete);
@@ -76,22 +58,6 @@ function checkElement() {
     updateLocalStorage();
 }
 
-</script>
-<style>
-    html{
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(342deg, rgba(255,255,255,1) 1%, rgba(234,162,206,1) 24%, rgba(233,158,203,1) 50%, rgba(233,157,203,1) 74%, rgba(242,196,223,1) 90%, rgba(242,196,223,1) 100%);
-    }   
-
-    li {
-        list-style: none;
-    }
-</style>  
-</html>
-
-
-  
-
-
-  
+function inputOnChange(){
+    document.getElementById("inputField").style.border = "";
+} 
