@@ -1,5 +1,6 @@
 const todoList = document.getElementById("toDoList");
-const toDoArray = [];
+let toDoArray = [];
+
 
 function updateLocalStorage() {
     window.localStorage.setItem("evenStorage", JSON.stringify(toDoArray));
@@ -18,9 +19,12 @@ function addElement(x, fromLocal = false) {
         alert("En tykkää thjistä taskeistä!!!!!!!")
         return;
     }
-
-    const index = x ? x.id : Math.max(...toDoArray.map(x => x.id)) + 1;
-    console.log(index);
+    let index = 0;
+    if(x?.id) {
+        index = x.id;
+    }else if(toDoArray.length > 0) {
+        index = Math.max(...toDoArray.map(x => x.id)) + 1;
+    }
     const node = document.createElement("li");
     const btnDelete = document.createElement("button");
     btnDelete.innerText = "X";
@@ -29,14 +33,14 @@ function addElement(x, fromLocal = false) {
         node.appendChild(document.createTextNode(x.task));
         btnDelete.addEventListener("click", () => {
             console.log("delete me", index);
-            removeElement();
+            removeElement(index);
         });
     }else {
         const value = document.getElementById("inputField").value;
         node.appendChild(document.createTextNode(value));
         btnDelete.addEventListener("click", () => {
             console.log("delete me", index)
-            removeElement();
+            removeElement(index);
         });
         toDoArray.push({id: index, task: value, checked: false});
         updateLocalStorage();
@@ -48,7 +52,8 @@ function addElement(x, fromLocal = false) {
     
 }
 
-function removeElement() {
+function removeElement(removeId) {
+    toDoArray = toDoArray.filter(x => x.id === removeId)
     // remove item from list and reset localstorage
     updateLocalStorage();
 }
