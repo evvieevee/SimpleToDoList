@@ -28,7 +28,7 @@ function addElement(x, fromLocal = false) {
     const node = document.createElement("li");
     const param = document.createElement("p");
     const btnDelete = document.createElement("button");
-    btnDelete.innerText = "X";
+    btnDelete.innerText = "Poista";
     
     if(x) {
         param.addEventListener("click", () => {
