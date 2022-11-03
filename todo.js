@@ -1,5 +1,5 @@
 const todoList = document.getElementById("toDoList");
-let toDoArray = [];
+let toDoArray = []; 
 
 
 function updateLocalStorage() {
@@ -16,33 +16,44 @@ function updateLocalStorage() {
 function addElement(x, fromLocal = false) {
     if(!fromLocal && document.getElementById("inputField").value.length < 3) {
         document.getElementById("inputField").style.border = "3px solid red";
-        alert("En tykkää thjistä taskeistä!!!!!!!")
+        alert("Tyhjä kenttä!")
         return;
     }
-    let index = 0;
+    let index = 1;
     if(x?.id) {
         index = x.id;
     }else if(toDoArray.length > 0) {
         index = Math.max(...toDoArray.map(x => x.id)) + 1;
     }
     const node = document.createElement("li");
+    const param = document.createElement("p");
     const btnDelete = document.createElement("button");
     btnDelete.innerText = "X";
     
     if(x) {
-        node.appendChild(document.createTextNode(x.task));
+        param.addEventListener("click", () => {
+            checkElement(param, index);
+        });
+        param.style.textDecoration = x.checked ? "line-through" : "unset";
+        param.appendChild(document.createTextNode(x.task))
+        node.appendChild(param);
         btnDelete.addEventListener("click", () => {
-            console.log("delete me", index);
-            removeElement(index);
+            removeElement(index, node);
         });
     }else {
         const value = document.getElementById("inputField").value;
-        node.appendChild(document.createTextNode(value));
-        btnDelete.addEventListener("click", () => {
-            console.log("delete me", index)
-            removeElement(index);
+        
+        param.appendChild(document.createTextNode(value))
+        node.appendChild(param);
+        param.addEventListener("click", () => {
+            checkElement(param, index);
         });
+        btnDelete.addEventListener("click", () => {
+            removeElement(index, node);
+        });
+
         toDoArray.push({id: index, task: value, checked: false});
+
         updateLocalStorage();
         document.getElementById("inputField").value = ""
     }
@@ -52,14 +63,17 @@ function addElement(x, fromLocal = false) {
     
 }
 
-function removeElement(removeId) {
-    toDoArray = toDoArray.filter(x => x.id === removeId)
-    // remove item from list and reset localstorage
+function removeElement(removeId, node) {
+    node.remove();
+    toDoArray = toDoArray.filter(x => x.id !== removeId)
     updateLocalStorage();
 }
 
-function checkElement() {
-
+function checkElement(node, index) {
+    const found = toDoArray.find(element => element.id === index);
+    console.log(toDoArray, index);
+    found.checked = !found.checked;
+    node.style.textDecoration = found.checked ? "line-through" : "unset";
     updateLocalStorage();
 }
 
