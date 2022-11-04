@@ -13,10 +13,10 @@
         <h2>To Do List</h2>
       
     </div>
-        <form id="myForm">
+        <form id="myForm" onsubmit="addElement(); return false;">
             <label for="task"> Lisää haluamasi tehtävä:</label>
-            <input type="text" onchange="inputOnChange()" name="fname" id="inputField"><br>
-            <input type="button" onclick="addElement()" value="Lisää" id="addButton">
+            <input type="text" onkeyup="inputOnChange()" name="fname" id="inputField"><br>
+            <input type="submit" value="Lisää" id="addButton">
         </form>
     <ul id="toDoList">
     
